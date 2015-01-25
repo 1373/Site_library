@@ -72,10 +72,29 @@ public class MainFrame extends JFrame {
         btFind.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String strWhere = "WHERE ";
+                boolean flIsSelected = false;
+                boolean flFirstAdded = false;
                 
+                if (pubId != -1) 
+                {
+                    strWhere += "publisherId = " + pubId + " ";
+                    flFirstAdded = true;
+                }
+                if (subId != -1) 
+                {
+                    if (flFirstAdded) strWhere += "AND ";
+                    strWhere += "subjectId = " + subId + " ";
+                    flFirstAdded = true;
+                }
+                if (authId != -1) 
+                {
+                    if (flFirstAdded) strWhere += "AND ";
+                    strWhere += "authorId = " + authId + " ";
+                    flFirstAdded = true;
+                }
                 
-                
-                
+                System.out.println("strWhere = " + strWhere);
                 
             }
         });
