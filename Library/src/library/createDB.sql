@@ -179,7 +179,28 @@ delete from Authors;
 
 -------
 
+insert into Books (bookId, bookName, publisherId, subjectId, shelfNumber, pubYear, price, countInStock)
+values (1, 'Книга1', 1, 1, 1, 2011, 111.00, 1),
+       (2, 'Книга2', 2, 2, 2, 2012, 222.00, 2),
+       (3, 'Книга3', 3, 3, 3, 2013, 333.00, 3);
 
+select * from Books;
+delete from Books;
+
+-------
+
+insert into BooksAuthors (bookId, authorId)
+values (1, 1),
+       (2, 2),
+       (3, 3);
+
+select * from BooksAuthors;
+delete from BooksAuthors;
+
+-------
+
+insert into Books (bookId, bookName, publisherId, subjectId, shelfNumber, pubYear, price, countInStock)
+values (4, 'Книга4', 1, 1, 1, 2014, 444.00, 0);
 
 --------------------------------------------------------------------------------
 
@@ -197,3 +218,7 @@ select authorId, authorName
 from Authors;
 
 -------
+
+select b.bookId, b.bookName, b.pubYear, b.shelfNumber, b.price, b.countInStock
+from (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId
+order by b.bookName;

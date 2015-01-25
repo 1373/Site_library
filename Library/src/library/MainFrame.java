@@ -8,17 +8,24 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
 
 public class MainFrame extends JFrame {
     
     private KeyValueComboBoxModel<String, String> publishers = new KeyValueComboBoxModel<String, String>();
     private KeyValueComboBoxModel<String, String> subjects = new KeyValueComboBoxModel<String, String>();
     private KeyValueComboBoxModel<String, String> authors = new KeyValueComboBoxModel<String, String>();
+    DefaultTableModel dtm;
     
     private int pubId = -1;
     private int subId = -1;
     private int authId = -1;
+    
+    private String[] tbTitle = 
+            {"Шифр книги", "Название книги", "Год издания" ,"Номер полки", "Цена", "Кол-во в наличии"};
     
     
     public MainFrame()
@@ -73,42 +80,110 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String strWhere = "WHERE ";
-                boolean flIsSelected = false;
+//                boolean flIsSelected = false;
                 boolean flFirstAdded = false;
                 
                 if (pubId != -1) 
                 {
-                    strWhere += "publisherId = " + pubId + " ";
+                    strWhere += "b.publisherId = " + pubId + " ";
                     flFirstAdded = true;
                 }
                 if (subId != -1) 
                 {
                     if (flFirstAdded) strWhere += "AND ";
-                    strWhere += "subjectId = " + subId + " ";
+                    strWhere += "b.subjectId = " + subId + " ";
                     flFirstAdded = true;
                 }
                 if (authId != -1) 
                 {
                     if (flFirstAdded) strWhere += "AND ";
-                    strWhere += "authorId = " + authId + " ";
+                    strWhere += "ba.authorId = " + authId + " ";
                     flFirstAdded = true;
                 }
                 
-                System.out.println("strWhere = " + strWhere);
+                if (chbInStock.isSelected())
+                {
+                    if (flFirstAdded) strWhere += "AND ";
+                    strWhere += "b.countInStock > 0 ";
+                    flFirstAdded = true;
+                }
                 
+//                System.out.println("strWhere = " + strWhere);
+                
+                String strTest = ((flFirstAdded) ? strWhere : "");
+                System.out.println("strTest = " + strTest);
+                
+                try {
+                    Connection conn = ConnectionToDB.getConnection();
+                    try {
+                        Statement stat = conn.createStatement();
+                        ResultSet res = stat.executeQuery(""
+                                + "SELECT  b.bookId as bId, "
+                                        + "b.bookName as bName, "
+                                        + "b.pubYear as pY, "
+                                        + "b.shelfNumber as sN, "
+                                        + "b.price as pr, "
+                                        + "b.countInStock as cIS, "
+                                        + "b.subjectId as sId, "
+                                        + "ba.authorId as aId, "
+                                        + "b.publisherId as pId "
+                                + "FROM (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId "
+                                + ((flFirstAdded) ? strWhere : "")
+                                + "ORDER BY b.bookName");
+                        
+                        List bookList = new ArrayList();
+                        boolean flFound = false;
+                        
+                        
+                        while (res.next()) {
+                            bookList.add(new String []
+                            {
+                                Integer.toString(res.getInt("bId")),
+                                res.getString("bName"),
+                                Integer.toString(res.getInt("pY")),
+                                Integer.toString(res.getInt("sN")),
+                                Float.toString(res.getFloat("pr")),
+                                Integer.toString(res.getInt("cIS"))
+                            }); 
+                            flFound = true;
+                        }
+                        
+                        if (flFound) {
+                            String[][] strRes = new String[bookList.size()][6];
+
+                            for (int i = 0; i < bookList.size(); i++) {
+                                String[] str = (String[]) bookList.get(i);
+                                for (int j = 0; j < 6; j++) {
+                                    strRes[i][j] = str[j];
+                                    System.out.println(i + " - " + j + ": " + strRes[i][j]);
+                                }
+                            }
+
+                            dtm = new DefaultTableModel(strRes, tbTitle);
+                        } else {
+                            dtm = new DefaultTableModel(new String[][] {}, tbTitle);
+                        }
+                        tbBooks.setModel(dtm);
+
+                    } finally {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
             }
         });
     }
     
-    private void initData()
-    {
+    private void initData() {
         setPublisher();
         setSubject();
         setAuthor();
+        tbBooks.setModel(dtm);
     }
     
-    private void setPublisher()
-    {
+    private void setPublisher() {
         cbPublisher.setModel(publishers);
         cbPublisher.setRenderer(new ComboBoxRenderer());
         
@@ -134,8 +209,7 @@ public class MainFrame extends JFrame {
         }
     }
     
-    private void setSubject()
-    {
+    private void setSubject() {
         cbSubject.setModel(subjects);
         cbSubject.setRenderer(new ComboBoxRenderer());
         
@@ -161,8 +235,7 @@ public class MainFrame extends JFrame {
         }
     }
     
-    private void setAuthor()
-    {
+    private void setAuthor() {
         cbAuthor.setModel(authors);
         cbAuthor.setRenderer(new ComboBoxRenderer());
         
@@ -205,6 +278,8 @@ public class MainFrame extends JFrame {
         btGiveBook = new javax.swing.JButton();
         btSaleBook = new javax.swing.JButton();
         btFind = new javax.swing.JButton();
+        
+        dtm = new DefaultTableModel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Информационная система библиотеки");
@@ -230,9 +305,7 @@ public class MainFrame extends JFrame {
         tbBooks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
             },
-            new String [] {
-                "Шифр книги", "Название книги", "Номер полки", "Цена", "Кол-во в наличии"
-            }
+            tbTitle
         ));
         spTable.setViewportView(tbBooks);
 
