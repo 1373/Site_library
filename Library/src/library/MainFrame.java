@@ -1,19 +1,116 @@
 package library;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JFrame;
 
 public class MainFrame extends JFrame {
     
+    private KeyValueComboBoxModel<String, String> publishers = new KeyValueComboBoxModel<String, String>();
+    private KeyValueComboBoxModel<String, String> subjects = new KeyValueComboBoxModel<String, String>();
+    private KeyValueComboBoxModel<String, String> authors = new KeyValueComboBoxModel<String, String>();
+    
     public MainFrame()
     {
-        initComponents();
+        initComponents();//инициализация компонентов
+        initData();
+    }
+    
+    private void initData()
+    {
+        setPublisher();
+        setSubject();
+        setAuthor();
+    }
+    
+    private void setPublisher()
+    {
+        cbPublisher.setModel(publishers);
+        cbPublisher.setRenderer(new ComboBoxRenderer());
+        
+        try {
+            Connection conn = ConnectionToDB.getConnection();
+            try {
+                Statement stat = conn.createStatement();
+                ResultSet res = stat.executeQuery(""
+                        + "SELECT publisherId, publisherName "
+                        + "FROM Publishers");
+                
+                publishers.clear();
+                publishers.put("-1", "");
+
+                while (res.next()) {
+                    publishers.put(Integer.toString(res.getInt("publisherId")), res.getString("publisherName"));
+                }
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void setSubject()
+    {
+        cbSubject.setModel(subjects);
+        cbSubject.setRenderer(new ComboBoxRenderer());
+        
+        try {
+            Connection conn = ConnectionToDB.getConnection();
+            try {
+                Statement stat = conn.createStatement();
+                ResultSet res = stat.executeQuery(""
+                        + "SELECT subjectId, subjectName "
+                        + "FROM Subjects");
+                
+                subjects.clear();
+                subjects.put("-1", "");
+
+                while (res.next()) {
+                    subjects.put(Integer.toString(res.getInt("subjectId")), res.getString("subjectName"));
+                }
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void setAuthor()
+    {
+        cbAuthor.setModel(authors);
+        cbAuthor.setRenderer(new ComboBoxRenderer());
+        
+        try {
+            Connection conn = ConnectionToDB.getConnection();
+            try {
+                Statement stat = conn.createStatement();
+                ResultSet res = stat.executeQuery(""
+                        + "SELECT authorId, authorName "
+                        + "FROM Authors");
+                
+                authors.clear();
+                authors.put("-1", "");
+
+                while (res.next()) {
+                    authors.put(Integer.toString(res.getInt("authorId")), res.getString("authorName"));
+                }
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     private void initComponents() {
 
         lbFilters = new javax.swing.JLabel();
-        lbDelivery = new javax.swing.JLabel();
-        cbDelivery = new javax.swing.JComboBox();
+        lbPublisher = new javax.swing.JLabel();
+        cbPublisher = new javax.swing.JComboBox();
         lbSubject = new javax.swing.JLabel();
         cbSubject = new javax.swing.JComboBox();
         lbAuthor = new javax.swing.JLabel();
@@ -33,7 +130,7 @@ public class MainFrame extends JFrame {
         lbFilters.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lbFilters.setText("Фильтры:");
 
-        lbDelivery.setText("Издательство:");
+        lbPublisher.setText("Издательство:");
 
 //        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -80,7 +177,7 @@ public class MainFrame extends JFrame {
                     .addComponent(sep, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbDelivery)
+                            .addComponent(lbPublisher)
                             .addComponent(lbFilters))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,7 +186,7 @@ public class MainFrame extends JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btFind))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbDelivery, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cbPublisher, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbSubject)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -116,8 +213,8 @@ public class MainFrame extends JFrame {
                     .addComponent(btFind))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbDelivery)
-                    .addComponent(cbDelivery, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbPublisher)
+                    .addComponent(cbPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbSubject)
                     .addComponent(cbSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbAuthor)
@@ -142,15 +239,15 @@ public class MainFrame extends JFrame {
     private javax.swing.JButton btSaleBook;
     private javax.swing.JButton btFind;
     private javax.swing.JCheckBox chbInStock;
-    private javax.swing.JComboBox cbDelivery;
+    private javax.swing.JComboBox cbPublisher;
     private javax.swing.JComboBox cbSubject;
     private javax.swing.JComboBox cbAuthor;
     private javax.swing.JLabel lbFilters;
-    private javax.swing.JLabel lbDelivery;
+    private javax.swing.JLabel lbPublisher;
     private javax.swing.JLabel lbSubject;
     private javax.swing.JLabel lbAuthor;
     private javax.swing.JScrollPane spTable;
     private javax.swing.JSeparator sep;
     private javax.swing.JTable tbBooks;
-    
+    //Publishers
 }
