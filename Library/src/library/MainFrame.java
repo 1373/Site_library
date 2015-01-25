@@ -1,5 +1,9 @@
 package library;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,10 +16,69 @@ public class MainFrame extends JFrame {
     private KeyValueComboBoxModel<String, String> subjects = new KeyValueComboBoxModel<String, String>();
     private KeyValueComboBoxModel<String, String> authors = new KeyValueComboBoxModel<String, String>();
     
+    private int pubId = -1;
+    private int subId = -1;
+    private int authId = -1;
+    
+    
     public MainFrame()
     {
         initComponents();//инициализация компонентов
-        initData();
+        initData();//инициализация данных
+        initActions();
+    }
+    
+    public void initActions()
+    {
+        cbPublisher.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    try {
+                        pubId = Integer.parseInt(publishers.getSelectedKey());
+                    } catch (Exception ex) {
+                        pubId = -1;
+                        System.out.println("ОШИБКА ПРЕОБРАЗОВАНИЯ КОДА ИЗДАТЕЛЬСТВА В ЧИСЛОВОЙ ТИП!");
+                    }
+                }
+            }
+        });
+        
+        cbSubject.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    try {
+                        subId = Integer.parseInt(subjects.getSelectedKey());
+                    } catch (Exception ex) {
+                        subId = -1;
+                        System.out.println("ОШИБКА ПРЕОБРАЗОВАНИЯ КОДА ТЕМАТИКИ В ЧИСЛОВОЙ ТИП!");
+                    }
+                }
+            }
+        });
+        
+        cbAuthor.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    try {
+                        authId = Integer.parseInt(authors.getSelectedKey());
+                    } catch (Exception ex) {
+                        authId = -1;
+                        System.out.println("ОШИБКА ПРЕОБРАЗОВАНИЯ КОДА АВТОРА В ЧИСЛОВОЙ ТИП!");
+                    }
+                }
+            }
+        });
+        
+        btFind.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                
+                
+                
+                
+            }
+        });
     }
     
     private void initData()
