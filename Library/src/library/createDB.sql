@@ -262,3 +262,30 @@ values ();
 
 select * from Delivery;
 delete from Delivery;
+
+
+
+create table logs(text varchar, added timestamp);
+drop table logs;
+
+create or replace function put_books_into_log() returns trigger as '
+declare
+    strgn varchar;
+    strres varchar;
+begin
+    strgn = NEW.bookName;
+    strres := TG_OP || '' '' || strgn;
+    insert into logs (text, added) values (strres,NOW());
+    return NEW;
+end;
+' language plpgsql;
+
+
+drop trigger tg_Groups;
+
+create trigger tg_Groups
+after update or insert or delete on Books for each row execute procedure put_books_into_log();
+
+
+select * from Books;
+select * from logs;
