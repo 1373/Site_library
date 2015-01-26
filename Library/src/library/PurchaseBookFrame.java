@@ -1,4 +1,4 @@
-package library;
+﻿package library;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,7 +56,7 @@ public class PurchaseBookFrame extends JFrame {
                         readerId = Integer.parseInt(readers.getSelectedKey());
                     } catch (Exception ex) {
                         readerId = -1;
-                        System.out.println("ОШИБКА ПРЕОБРАЗОВАНИЯ КОДА ЧИТАТЕЛЯ В ЧИСЛОВОЙ ТИП!");
+                        System.out.println("ОШИБКА ПРЕОБРАЗОВАНИЯ КОДА ЧИТАТЕЛЯ В ЧИСЛОВОЙ ТИП!");// выводим сообщение об ошибке 
                     }
                 }
             }
