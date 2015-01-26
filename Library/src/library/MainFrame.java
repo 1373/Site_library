@@ -1,4 +1,4 @@
-package library;
+﻿package library;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         initComponents();//инициализация компонентов
-        initData();//инициализация данных
+        initData();//инициализация данных бд
         initActions();//инициализация событий
     }
 
