@@ -5,10 +5,6 @@ import java.util.AbstractMap;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-/**
- *
- * @author abelash
- */
 public class ComboBoxRenderer extends DefaultListCellRenderer {
 
     @Override
