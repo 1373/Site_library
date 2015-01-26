@@ -280,12 +280,12 @@ begin
 end;
 ' language plpgsql;
 
-
-drop trigger tg_Books;
-
 create trigger tg_Books
 after update or insert or delete on Books for each row execute procedure put_books_into_log();
 
 
 select * from Books;
 select * from logs;
+
+
+drop trigger tg_Books;
