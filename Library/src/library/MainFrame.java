@@ -215,19 +215,6 @@ public class MainFrame extends JFrame {
                         ex.printStackTrace();
                     }
                 }
-                
-                
-                
-                
-//                System.out.println((int)dtm.getValueAt(tbBooks.getSelectedRow(), 0));
-//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
-//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
-//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
-//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
-                
-                
-                
-                
             }
         });
     }
@@ -345,13 +332,10 @@ public class MainFrame extends JFrame {
 
         lbPublisher.setText("Издательство:");
 
-//        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         lbSubject.setText("Тематика:");
 
-//        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         lbAuthor.setText("Авторы:");
 
-//        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         chbInStock.setText("В наличии");
 
         tbBooks.setModel(new javax.swing.table.DefaultTableModel(
