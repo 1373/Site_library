@@ -86,9 +86,11 @@ public class PurchaseBookFrame extends JFrame{
                                         + "now()::date, "
                                         + "" + price + ")");
                             
-                            PreparedStatement ps = conn.prepareStatement(
-                                    "UPDATE Books SET countInStock = countInStock - 1");
-
+                            stat.executeUpdate(""
+                                    + "UPDATE Books "
+                                    + "SET countInStock = countInStock - 1"
+                                    + "WHERE bookId = " + bookId + "");
+                            
                             JOptionPane.showMessageDialog(null, "Книга успешно продана!", "УРААА!", JOptionPane.INFORMATION_MESSAGE);
 
                             dispose();

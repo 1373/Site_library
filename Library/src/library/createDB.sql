@@ -250,3 +250,7 @@ delete from Purchase;
 -------
 
 select now()::date;
+
+-------
+
+UPDATE Books SET countInStock = countInStock + 1;
