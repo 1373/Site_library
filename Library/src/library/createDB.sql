@@ -199,6 +199,16 @@ delete from BooksAuthors;
 
 -------
 
+insert into Readers (readerId, readerName, phone, address)
+values (1, 'Читатель1', '8(921)111-11-11', 'First street, 1'),
+       (2, 'Читатель2', '8(921)222-22-22', 'Second street, 2'),
+       (3, 'Читатель3', '8(921)333-33-33', 'Third street, 3');
+
+select * from Readers;
+delete from Readers;
+
+-------
+
 insert into Books (bookId, bookName, publisherId, subjectId, shelfNumber, pubYear, price, countInStock)
 values (4, 'Книга4', 1, 1, 1, 2014, 444.00, 0);
 
@@ -220,5 +230,11 @@ from Authors;
 -------
 
 select b.bookId, b.bookName, b.pubYear, b.shelfNumber, b.price, b.countInStock
+from (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId
+order by b.bookName;
+
+-------
+
+select distinct b.bookId, b.bookName, b.pubYear, b.shelfNumber, b.price, b.countInStock
 from (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId
 order by b.bookName;

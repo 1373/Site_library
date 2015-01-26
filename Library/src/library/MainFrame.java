@@ -111,15 +111,12 @@ public class MainFrame extends JFrame {
                     try {
                         Statement stat = conn.createStatement();
                         ResultSet res = stat.executeQuery(""
-                                + "SELECT  b.bookId as bId, "
+                                + "SELECT DISTINCT b.bookId as bId, "
                                 + "b.bookName as bName, "
                                 + "b.pubYear as pY, "
                                 + "b.shelfNumber as sN, "
                                 + "b.price as pr, "
-                                + "b.countInStock as cIS, "
-                                + "b.subjectId as sId, "
-                                + "ba.authorId as aId, "
-                                + "b.publisherId as pId "
+                                + "b.countInStock as cIS "
                                 + "FROM (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId "
                                 + ((flFirstAdded) ? strWhere : "")
                                 + "ORDER BY b.bookName");
@@ -161,6 +158,14 @@ public class MainFrame extends JFrame {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+            }
+        });
+
+        btAddBook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddBookFrame abf = new AddBookFrame();
+                abf.setVisible(true);
             }
         });
     }
