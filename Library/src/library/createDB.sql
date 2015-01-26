@@ -222,3 +222,9 @@ from Authors;
 select b.bookId, b.bookName, b.pubYear, b.shelfNumber, b.price, b.countInStock
 from (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId
 order by b.bookName;
+
+-------
+
+select distinct b.bookId, b.bookName, b.pubYear, b.shelfNumber, b.price, b.countInStock
+from (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId
+order by b.bookName;
