@@ -217,6 +217,52 @@ public class MainFrame extends JFrame {
                 }
             }
         });
+        
+        btGiveBook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (tbBooks.getSelectedRow() == -1)
+                    JOptionPane.showMessageDialog(null, "Выберите книгу на выдачу!", "ОШИБКА!", JOptionPane.ERROR_MESSAGE);
+                else if(Integer.parseInt(dtm.getValueAt(tbBooks.getSelectedRow(), 5).toString()) == 0)
+                    JOptionPane.showMessageDialog(null, "Данной книги сейчас нет в наличии!", "ОШИБКА!", JOptionPane.ERROR_MESSAGE);
+                else {
+                    try {
+                        Connection conn = ConnectionToDB.getConnection();
+                        try {
+                            int bId = Integer.parseInt(dtm.getValueAt(tbBooks.getSelectedRow(), 0).toString());
+                            Statement stat = conn.createStatement();
+                            ResultSet res = stat.executeQuery(""
+                                    + "SELECT "
+                                        + "b.bookName as bName, "
+                                        + "b.pubYear as pY, "
+                                        + "b.price as pr, "
+                                        + "p.publisherName as pName "
+                                    + "FROM Books b INNER JOIN Publishers p ON b.publisherId = p.publisherId "
+                                    + "WHERE b.bookId = " + bId + "");
+                            
+                            if (res.next()) {
+                                System.out.println(bId);
+                                System.out.println(res.getString("bName"));
+                                System.out.println(res.getString("pName"));
+                                System.out.println(Integer.toString(res.getInt("pY")));
+                                
+                                DeliveryBookFrame dbf = new DeliveryBookFrame(
+                                        bId,
+                                        res.getString("bName"),
+                                        res.getString("pName"),
+                                        Integer.toString(res.getInt("pY"))
+                                );
+                                dbf.setVisible(true);
+                            }
+                        } finally {
+                            conn.close();
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     private void initData() {

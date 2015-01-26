@@ -253,4 +253,12 @@ select now()::date;
 
 -------
 
-UPDATE Books SET countInStock = countInStock + 1;
+UPDATE Books SET countInStock = countInStock + 1 where bookId = 1;
+
+-------
+
+insert into Delivery (readerId, bookId, receiptDate, returnDate)
+values ();
+
+select * from Delivery;
+delete from Delivery;
