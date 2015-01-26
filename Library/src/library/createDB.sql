@@ -238,3 +238,15 @@ order by b.bookName;
 select distinct b.bookId, b.bookName, b.pubYear, b.shelfNumber, b.price, b.countInStock
 from (Books b left join Publishers p on b.publisherId = p.publisherId) left join BooksAuthors ba on b.bookId = ba.bookId
 order by b.bookName;
+
+-------
+
+insert into Purchase (bookId, readerId, purDate, price)
+values ();
+
+select * from Purchase;
+delete from Purchase;
+
+-------
+
+select now()::date;

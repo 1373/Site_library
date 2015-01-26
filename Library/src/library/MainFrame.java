@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class MainFrame extends JFrame {
@@ -166,6 +167,67 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 AddBookFrame abf = new AddBookFrame();
                 abf.setVisible(true);
+            }
+        });
+        
+        btSaleBook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (tbBooks.getSelectedRow() == -1)
+                    JOptionPane.showMessageDialog(null, "Выберите книгу на продажу!", "ОШИБКА!", JOptionPane.ERROR_MESSAGE);
+                else if(Integer.parseInt(dtm.getValueAt(tbBooks.getSelectedRow(), 5).toString()) == 0)
+                    JOptionPane.showMessageDialog(null, "Данной книги сейчас нет в наличии!", "ОШИБКА!", JOptionPane.ERROR_MESSAGE);
+                else {
+                    try {
+                        Connection conn = ConnectionToDB.getConnection();
+                        try {
+                            int bId = Integer.parseInt(dtm.getValueAt(tbBooks.getSelectedRow(), 0).toString());
+                            Statement stat = conn.createStatement();
+                            ResultSet res = stat.executeQuery(""
+                                    + "SELECT "
+                                        + "b.bookName as bName, "
+                                        + "b.pubYear as pY, "
+                                        + "b.price as pr, "
+                                        + "p.publisherName as pName "
+                                    + "FROM Books b INNER JOIN Publishers p ON b.publisherId = p.publisherId "
+                                    + "WHERE b.bookId = " + bId + "");
+                            
+                            if (res.next()) {
+                                System.out.println(bId);
+                                System.out.println(res.getString("bName"));
+                                System.out.println(Integer.toString(res.getInt("pY")));
+                                System.out.println(res.getString("pName"));
+                                System.out.println(Float.toString(res.getFloat("pr")));
+                                
+                                PurchaseBookFrame pbf = new PurchaseBookFrame(
+                                        bId,
+                                        res.getString("bName"),
+                                        Integer.toString(res.getInt("pY")),
+                                        res.getString("pName"),
+                                        Float.toString(res.getFloat("pr"))
+                                );
+                                pbf.setVisible(true);
+                            }
+                        } finally {
+                            conn.close();
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                
+                
+                
+                
+//                System.out.println((int)dtm.getValueAt(tbBooks.getSelectedRow(), 0));
+//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
+//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
+//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
+//                System.out.println(dtm.getValueAt(tbBooks.getSelectedRow(), 1).toString());
+                
+                
+                
+                
             }
         });
     }

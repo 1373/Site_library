@@ -31,6 +31,7 @@ public class AddBookFrame extends JFrame {
     }
 
     public AddBookFrame() {
+        setTitle("Добавление книги");
         initComponents();//инициализация компонентов
         initData();//инициализация данных
         initActions();//инициализация событий
