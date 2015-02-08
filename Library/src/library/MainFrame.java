@@ -271,7 +271,8 @@ public class MainFrame extends JFrame {
         setAuthor();
         tbBooks.setModel(dtm);
     }
-
+    
+    //заполнение списка издательств
     private void setPublisher() {
         cbPublisher.setModel(publishers);
         cbPublisher.setRenderer(new ComboBoxRenderer());
@@ -297,7 +298,7 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
         }
     }
-
+    //заполнение списка тематик
     private void setSubject() {
         cbSubject.setModel(subjects);
         cbSubject.setRenderer(new ComboBoxRenderer());
@@ -323,7 +324,7 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
         }
     }
-
+    //заполнение списка авторов
     private void setAuthor() {
         cbAuthor.setModel(authors);
         cbAuthor.setRenderer(new ComboBoxRenderer());
